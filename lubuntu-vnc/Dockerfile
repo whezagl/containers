@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install necessary packages --no-install-recommends
 RUN apt-get update && apt-get install -y --no-install-suggests \
     tigervnc-standalone-server tigervnc-common x11vnc \
-    lxqt lxqt-core websockify \
+    lxqt-core \
     sddm \
     xorg \
     xauth \
@@ -40,11 +40,6 @@ RUN chown vncuser:vncuser /home/vncuser/startup.sh && \
 # Add sheldon init to zshrc
 RUN echo 'eval "$(sheldon source)"' > /home/vncuser/.zshrc && \
     chown vncuser:vncuser /home/vncuser/.zshrc
-
-# Copy and set up startup script
-COPY startup.sh /home/vncuser/startup.sh
-RUN chown vncuser:vncuser /home/vncuser/startup.sh && \
-    chmod +x /home/vncuser/startup.sh
 
 # Switch to non-root user
 USER vncuser
