@@ -18,28 +18,22 @@ RUN apt-get update && apt-get install -y --no-install-suggests \
     curl \
     zsh \
     git \
-    cargo \
     && rm -rf /var/lib/apt/lists/*
 
 # Set up user environment
 RUN adduser --disabled-password --gecos '' vncuser && \
     adduser vncuser sudo && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
-    cargo install sheldon && \
-    mv /root/.cargo/bin/sheldon /usr/local/bin/ && \
-    mkdir -p /home/vncuser/.config/sheldon && \
+    usermod --shell /usr/bin/zsh vncuser && \
     chsh -s /usr/bin/zsh vncuser
 
 # Copy configuration files
 COPY startup.sh /home/vncuser/startup.sh
-COPY plugins.toml /home/vncuser/.config/sheldon/plugins.toml
 RUN chown vncuser:vncuser /home/vncuser/startup.sh && \
     chmod +x /home/vncuser/startup.sh && \
-    chown -R vncuser:vncuser /home/vncuser/.config
-
-# Add sheldon init to zshrc
-RUN echo 'eval "$(sheldon source)"' > /home/vncuser/.zshrc && \
-    chown vncuser:vncuser /home/vncuser/.zshrc
+    su - vncuser -c 'curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh' && \
+    echo 'skip_global_compinit=1' > /home/vncuser/.zshenv && \
+    chown vncuser:vncuser /home/vncuser/.zshenv
 
 # Switch to non-root user
 USER vncuser

@@ -7,12 +7,23 @@ vncserver -kill :1 || true
 rm -rf /tmp/.X* /tmp/.x* ~/.vnc/*.pid
 
 # Generate VNC password
-vncpasswd -f <<< 'your_secure_password' > ~/.vnc/passwd
+vncpasswd -f <<< '1' > ~/.vnc/passwd
 chmod 600 ~/.vnc/passwd
 
 # Start LXQt session
 export XDG_SESSION_TYPE=x11
 export XDG_CURRENT_DESKTOP=LXQt
+export SHELL=/usr/bin/zsh
+
+# Create xstartup for VNC
+cat > ~/.vnc/xstartup << 'EOF'
+#!/usr/bin/zsh
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+export SHELL=/usr/bin/zsh
+exec startlxqt
+EOF
+chmod +x ~/.vnc/xstartup
 
 # Start VNC server
 vncserver :1 \
