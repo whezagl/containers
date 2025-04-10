@@ -1,0 +1,6 @@
+shell = "zsh"
+
+[[plugins]]
+name = "ohmyzsh"
+git = "https://github.com/ohmyzsh/ohmyzsh"
+use = ["lib/*", "plugins/git/git.plugin.zsh", "plugins/sudo/sudo.plugin.zsh"]
