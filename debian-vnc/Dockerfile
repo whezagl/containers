@@ -3,8 +3,8 @@ FROM debian:bookworm
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install necessary packages
-RUN apt-get update && apt-get install -y --no-install-recommends --no-install-suggests \
+# Install necessary packages --no-install-recommends
+RUN apt-get update && apt-get install -y --no-install-suggests \
     tigervnc-standalone-server tigervnc-common x11vnc \
     lxqt-core \
     sddm \
@@ -18,8 +18,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends --no-install-su
     curl \
     zsh \
     git \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+    chromium \
+    chromium-l10n \
+    ca-certificates && \
+    # Clean up
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set up user environment
 RUN adduser --disabled-password --gecos '' vncuser && \

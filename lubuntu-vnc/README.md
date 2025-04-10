@@ -1,6 +1,7 @@
-your_secure_password
+password:1
 ```bash
 docker build -t lubuntu-vnc .
+DOCKER_BUILDKIT=1 docker build --progress=plain -t lubuntu-vnc . 
 
 docker run -dit \
   -p 5900:5900 \
