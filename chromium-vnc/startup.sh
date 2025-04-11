@@ -15,6 +15,17 @@ export XDG_SESSION_TYPE=x11
 export XDG_CURRENT_DESKTOP=LXQt
 export SHELL=/usr/bin/zsh
 
+# Configure QTerminal with transparency
+mkdir -p ~/.config/qterminal.org
+cat > ~/.config/qterminal.org/qterminal.ini << 'EOF'
+[General]
+ApplicationTransparency=25
+TerminalBackgroundImage=
+TerminalBackgroundMode=0
+TerminalMargin=0
+TerminalTransparency=25
+EOF
+
 # Create xstartup for VNC
 cat > ~/.vnc/xstartup << 'EOF'
 #!/usr/bin/zsh

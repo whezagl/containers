@@ -6,8 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install necessary packages --no-install-recommends
 RUN apt-get update && apt-get install -y --no-install-suggests \
     tigervnc-standalone-server tigervnc-common x11vnc \
-    lxqt-core openbox \
-    # sddm \
+    lxqt-core openbox kitty ca-certificates \
     xorg \
     xauth \
     xinit \
@@ -18,24 +17,19 @@ RUN apt-get update && apt-get install -y --no-install-suggests \
     curl \
     zsh \
     git \
-    chromium \
-    # chromium-l10n \
-    ca-certificates && \
-    # Clean up
+    chromium && \
     apt-get clean && \
+    apt-get remove zutty -y && \
     rm -rf /var/lib/apt/lists/*
 
 # Set up user environment
 RUN adduser --disabled-password --gecos '' vncuser && \
     echo 'vncuser:1' | chpasswd && \
     usermod -aG sudo vncuser && \
-    # adduser vncuser sudo && \
     usermod --shell /usr/bin/zsh vncuser && \
-    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
-    # chsh -s /usr/bin/zsh vncuser && \
-    # Configure LXQt to use Openbox as default window manager
-    mkdir -p /home/vncuser/.config/lxqt && \
+    mkdir  -p /home/vncuser/.config/lxqt && \
     echo '[General]\nwindow_manager=openbox' > /home/vncuser/.config/lxqt/session.conf && \
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
     chown -R vncuser:vncuser /home/vncuser/.config
 
 # Copy configuration files
