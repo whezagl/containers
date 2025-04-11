@@ -4,8 +4,9 @@ FROM debian:bookworm
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install necessary packages --no-install-recommends
-RUN apt-get update && apt-get install -y --no-install-suggests \
-    tigervnc-standalone-server tigervnc-common x11vnc \
+RUN apt-get update && apt-get install -y \
+    --no-install-recommends --no-install-suggests \
+    tigervnc-standalone-server tigervnc-common x11vnc \     
     lxqt-core openbox kitty ca-certificates \
     xorg \
     xauth \
@@ -17,10 +18,16 @@ RUN apt-get update && apt-get install -y --no-install-suggests \
     curl \
     zsh \
     git \
-    chromium && \
-    apt-get clean && \
-    apt-get remove zutty -y && \
-    rm -rf /var/lib/apt/lists/*
+    chromium \
+    # vncpasswd - --no-install-recommends prevent it
+    tigervnc-tools \
+    breeze-icon-theme \
+    adwaita-icon-theme \
+    hicolor-icon-theme \
+    && apt-get remove zutty -y \
+    && update-icon-caches /usr/share/icons/* \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set up user environment
 RUN adduser --disabled-password --gecos '' vncuser && \
