@@ -2,6 +2,11 @@
 # Initialize Xauthority
 touch ~/.Xauthority
 
+# Start LXQt session
+export XDG_SESSION_TYPE=x11
+export XDG_CURRENT_DESKTOP=LXQt
+export SHELL=/usr/bin/zsh
+
 # Cleanup any existing VNC instances
 vncserver -kill :1 || true
 rm -rf /tmp/.X* /tmp/.x* ~/.vnc/*.pid
@@ -9,22 +14,6 @@ rm -rf /tmp/.X* /tmp/.x* ~/.vnc/*.pid
 # Generate VNC password
 vncpasswd -f <<< '1' > ~/.vnc/passwd
 chmod 600 ~/.vnc/passwd
-
-# Start LXQt session
-export XDG_SESSION_TYPE=x11
-export XDG_CURRENT_DESKTOP=LXQt
-export SHELL=/usr/bin/zsh
-
-# Configure QTerminal with transparency
-mkdir -p ~/.config/qterminal.org
-cat > ~/.config/qterminal.org/qterminal.ini << 'EOF'
-[General]
-ApplicationTransparency=25
-TerminalBackgroundImage=
-TerminalBackgroundMode=0
-TerminalMargin=0
-TerminalTransparency=25
-EOF
 
 # Create xstartup for VNC
 cat > ~/.vnc/xstartup << 'EOF'

@@ -6,9 +6,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install necessary packages --no-install-recommends
 RUN apt-get update && apt-get install -y \
     --no-install-recommends --no-install-suggests \
-    tigervnc-standalone-server tigervnc-common x11vnc \     
-    # vncpasswd - cause by no-recommends 
-    tigervnc-tools \
     lxqt-core openbox kitty ca-certificates \
     xorg \
     xauth \
@@ -35,13 +32,10 @@ RUN adduser --disabled-password --gecos '' vncuser && \
     usermod --shell /usr/bin/zsh vncuser && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-# Copy configuration files
-COPY user/startup.sh /home/vncuser/startup.sh
 COPY user/.config/lxqt/session.conf /home/vncuser/.config/lxqt/session.conf
+COPY user/.config/qterminal.org/qterminal.ini /home/vncuser/.config/qterminal.org/qterminal.ini
 
-RUN chmod +x /home/vncuser/startup.sh && \
-    chown vncuser:vncuser /home/vncuser/startup.sh && \
-    chown -R vncuser:vncuser /home/vncuser/.config && \
+RUN chown -R vncuser:vncuser /home/vncuser/.config && \
     su - vncuser -c 'curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh' && \
     echo 'skip_global_compinit=1' > /home/vncuser/.zshenv && \
     chown vncuser:vncuser /home/vncuser/.zshenv && \
@@ -57,9 +51,3 @@ WORKDIR /home/vncuser
 
 # Prepare VNC directory
 RUN mkdir -p ~/.vnc
-
-# Expose VNC ports
-EXPOSE 5900 5901
-
-# Set the entrypoint
-ENTRYPOINT ["/home/vncuser/startup.sh"]
