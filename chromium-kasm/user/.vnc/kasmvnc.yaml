@@ -1,0 +1,11 @@
+desktop:
+  resolution:
+    width: 1920
+    height: 1080
+  allow_resize: true
+security:
+  authentication:
+    credentials:
+      username: vncuser
+      password: 1
+    enable_password: true
