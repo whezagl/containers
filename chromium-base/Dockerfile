@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     zsh \
     git \
+    vim \
     chromium \
     # missing - cause by no-recommends 
     breeze-icon-theme \
