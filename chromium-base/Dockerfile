@@ -7,6 +7,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     --no-install-recommends --no-install-suggests \
     tigervnc-standalone-server tigervnc-common x11vnc \     
+    # vncpasswd - cause by no-recommends 
+    tigervnc-tools \
     lxqt-core openbox kitty ca-certificates \
     xorg \
     xauth \
@@ -19,13 +21,10 @@ RUN apt-get update && apt-get install -y \
     zsh \
     git \
     chromium \
-    # vncpasswd - --no-install-recommends prevent it
-    tigervnc-tools \
+    # missing - cause by no-recommends 
     breeze-icon-theme \
-    adwaita-icon-theme \
-    hicolor-icon-theme \
-    && apt-get remove zutty -y \
     && update-icon-caches /usr/share/icons/* \
+    && apt-get remove zutty -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
