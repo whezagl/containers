@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y \
     git \
     vim \
     chromium \
+    featherpad \
     # missing - cause by no-recommends 
     breeze-icon-theme \
     && update-icon-caches /usr/share/icons/* \
