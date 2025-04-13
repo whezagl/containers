@@ -20,7 +20,7 @@ USER vncuser
 RUN sudo adduser vncuser ssl-cert
 
 # ports and volumes
-EXPOSE 3000 3001 5900
+EXPOSE 8444
 
 VOLUME /config
 

@@ -11,6 +11,6 @@ docker run -it \
   -v $(pwd)/user/.zim:/home/vncuser/.zim \
   -v $(pwd)/user/.config/lxqt:/home/vncuser/.config/lxqt \
   -v $(pwd)/user/etc/xdg/menus:/etc/xdg/menus \
-  chromium-kasm
+  chromium-kasm 
 ```
 Access: https://localhost:8444/
