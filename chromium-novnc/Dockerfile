@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install necessary packages for novnc
 RUN apt-get update && apt-get install -y \
-    python3-numpy websockify novnc \
+    python3-numpy websockify novnc npm \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
