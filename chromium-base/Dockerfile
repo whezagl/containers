@@ -3,7 +3,7 @@ FROM debian:bookworm
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install necessary packages --no-install-recommends
+# Install necessary packages
 RUN apt-get update && apt-get install -y \
     --no-install-recommends --no-install-suggests \
     lxqt-core openbox kitty ca-certificates \

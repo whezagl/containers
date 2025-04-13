@@ -4,7 +4,7 @@ USER root
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Download and install KasmVNC server and expect
+# Install necessary packages for KasmVNC
 RUN wget -q https://github.com/kasmtech/KasmVNC/releases/download/v1.3.3/kasmvncserver_bookworm_1.3.3_arm64.deb \
     && apt-get update \
     && apt-get install -y ./kasmvncserver_bookworm_1.3.3_arm64.deb expect \

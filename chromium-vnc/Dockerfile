@@ -4,7 +4,7 @@ USER root
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install necessary packages --no-install-recommends
+# Install necessary packages for vnc
 RUN apt-get update && apt-get install -y \
     --no-install-recommends --no-install-suggests \
     tigervnc-standalone-server tigervnc-common x11vnc \     
