@@ -7,6 +7,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     --no-install-recommends --no-install-suggests \
     lxqt-core openbox kitty ca-certificates \
+    ripgrep fzf zsh \
+    zsh-autosuggestions \
+    zsh-syntax-highlighting \
     xorg \
     xauth \
     xinit \
@@ -15,7 +18,6 @@ RUN apt-get update && apt-get install -y \
     sudo \
     wget \
     curl \
-    zsh \
     git \
     vim \
     chromium \
@@ -27,29 +29,24 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Set up user environment
-RUN adduser --disabled-password --gecos '' vncuser && \
-    echo 'vncuser:1' | chpasswd && \
-    usermod -aG sudo vncuser && \
-    usermod --shell /usr/bin/zsh vncuser && \
-    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-COPY user/.config/lxqt/session.conf /home/vncuser/.config/lxqt/session.conf
-COPY user/.config/qterminal.org/qterminal.ini /home/vncuser/.config/qterminal.org/qterminal.ini
-
-RUN chown -R vncuser:vncuser /home/vncuser/.config && \
-    su - vncuser -c 'curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh' && \
-    echo 'skip_global_compinit=1' > /home/vncuser/.zshenv && \
-    chown vncuser:vncuser /home/vncuser/.zshenv && \
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/vncuser/.powerlevel10k && \
-    echo 'source ~/.powerlevel10k/powerlevel10k.zsh-theme' >> /home/vncuser/.zshrc && \
-    echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /home/vncuser/.zshrc && \
-    curl -fsSL https://raw.githubusercontent.com/romkatv/powerlevel10k/master/config/p10k-lean.zsh > /home/vncuser/.p10k.zsh && \
-    chown -R vncuser:vncuser /home/vncuser/.powerlevel10k /home/vncuser/.zshrc /home/vncuser/.p10k.zsh
+# Set up user environment  
+RUN adduser --disabled-password --gecos '' vncuser \
+    && echo 'vncuser:1' | chpasswd \
+    && usermod -aG sudo vncuser \
+    && usermod --shell /usr/bin/zsh vncuser \
+    && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # Switch to non-root user
 USER vncuser
 WORKDIR /home/vncuser
 
-# Prepare VNC directory
-RUN mkdir -p ~/.vnc
+COPY user/.config/lxqt/session.conf /home/vncuser/.config/lxqt/session.conf
+COPY user/.config/qterminal.org/qterminal.ini /home/vncuser/.config/qterminal.org/qterminal.ini
+
+RUN mkdir -p ~/.vnc \
+    && echo 'skip_global_compinit=1' > /home/vncuser/.zshenv \
+    && curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh \
+    && curl -fsSL https://raw.githubusercontent.com/romkatv/powerlevel10k/master/config/p10k-lean.zsh > /home/vncuser/.p10k.zsh \
+    && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/vncuser/.powerlevel10k \
+    && echo 'source ~/.powerlevel10k/powerlevel10k.zsh-theme' >> /home/vncuser/.zshrc \
+    && echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /home/vncuser/.zshrc

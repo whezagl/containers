@@ -2,6 +2,11 @@
 # Initialize Xauthority
 touch ~/.Xauthority
 
+# Start LXQt session
+export XDG_SESSION_TYPE=x11
+export XDG_CURRENT_DESKTOP=LXQt
+export SHELL=/usr/bin/zsh
+
 # Cleanup any existing VNC instances
 vncserver -kill :1 || true
 rm -rf /tmp/.X* /tmp/.x* ~/.vnc/*.pid
@@ -10,15 +15,9 @@ rm -rf /tmp/.X* /tmp/.x* ~/.vnc/*.pid
 vncpasswd -f <<< '1' > ~/.vnc/passwd
 chmod 600 ~/.vnc/passwd
 
-# Start LXQt session
-export XDG_SESSION_TYPE=x11
-export XDG_CURRENT_DESKTOP=LXQt
-export SHELL=/usr/bin/zsh
-
 # Create xstartup for VNC
 cat > ~/.vnc/xstartup << 'EOF'
 #!/usr/bin/zsh
-RESOLUTION=1920x1080
 unset SESSION_MANAGER
 unset DBUS_SESSION_BUS_ADDRESS
 export SHELL=/usr/bin/zsh
@@ -30,7 +29,7 @@ websockify --web=/usr/share/novnc/ 6080 localhost:5900 &
 
 # Start VNC server
 vncserver :1 \
-    -geometry ${RESOLUTION} \
+    -geometry 1920x1080 \
     -depth 24 \
     -rfbport 5900 \
     -localhost no \
@@ -39,6 +38,8 @@ vncserver :1 \
 
 # Start view-only x11vnc
 x11vnc -display :1 \
+    -ncache 10 \
+    -ncache_cr \
     -rfbport 5901 \
     -shared \
     -forever \

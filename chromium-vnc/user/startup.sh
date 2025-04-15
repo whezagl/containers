@@ -36,6 +36,8 @@ vncserver :1 \
 
 # Start view-only x11vnc
 x11vnc -display :1 \
+    -ncache 10 \
+    -ncache_cr \
     -rfbport 5901 \
     -shared \
     -forever \

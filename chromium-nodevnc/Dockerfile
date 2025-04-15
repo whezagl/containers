@@ -4,10 +4,11 @@ USER root
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install necessary packages for novnc
-RUN apt-get update && apt-get install -y \
-    --no-install-recommends --no-install-suggests \
-    python3-numpy websockify novnc npm \
+# Install necessary packages for vnc
+RUN apt-get update && \
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y --no-install-recommends --no-install-suggests \
+    nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -19,7 +20,7 @@ RUN chmod +x /home/vncuser/startup.sh && \
 USER vncuser
 
 # Expose VNC ports
-EXPOSE 5900 5901 6080
+EXPOSE 5900 5901
 
 # Set the entrypoint
 ENTRYPOINT ["/home/vncuser/startup.sh"]
