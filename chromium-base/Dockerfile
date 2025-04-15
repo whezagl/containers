@@ -31,10 +31,14 @@ RUN apt-get update && apt-get install -y \
     && mkdir -p /var/crash \
     && chmod 777 /var/crash \
     && mkdir -p /data \
-    && chmod 777 /data
+    && chmod 777 /data \
+    && mkdir -p /var/run/dbus \
+    && dbus-uuidgen > /var/lib/dbus/machine-id
 
-# Add Chromium sandbox permissions
-RUN find /usr -name chrome-sandbox -type f -exec chmod 4755 {} \;
+# Add this before switching to vncuser
+RUN mkdir -p /run/dbus && \
+    chown messagebus:messagebus /run/dbus && \
+    dbus-daemon --system
 
 # Set up user environment  
 RUN adduser --disabled-password --gecos '' vncuser \
