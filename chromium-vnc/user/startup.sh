@@ -28,15 +28,19 @@ chmod +x ~/.vnc/xstartup
 # Start VNC server
 vncserver :1 \
     -geometry 1920x1080 \
+    -dpi 96 \
     -depth 24 \
     -rfbport 5900 \
     -localhost no \
-    -SecurityTypes VncAuth \
-    -alwaysshared
+    -alwaysshared \
+    -AcceptKeyEvents=1 \
+    -AcceptPointerEvents=1 \
+    -AcceptSetDesktopSize=1 \
+    -SecurityTypes VncAuth 
 
 # Start view-only x11vnc
 x11vnc -display :1 \
-    -ncache 10 \
+    -ncache 0 \
     -ncache_cr \
     -rfbport 5901 \
     -shared \
