@@ -36,7 +36,7 @@ RUN adduser --disabled-password --gecos '' vncuser \
     && usermod --shell /usr/bin/zsh vncuser \
     && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-# Switch to non-root user
+# Switch to non-root user.
 USER vncuser
 WORKDIR /home/vncuser
 
