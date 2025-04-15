@@ -27,14 +27,29 @@ RUN apt-get update && apt-get install -y \
     && update-icon-caches /usr/share/icons/* \
     && apt-get remove zutty -y \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /var/crash \
+    && chmod 777 /var/crash \
+    && mkdir -p /data \
+    && chmod 777 /data
+
+# Add Chromium sandbox permissions
+RUN find /usr -name chrome-sandbox -type f -exec chmod 4755 {} \;
 
 # Set up user environment  
 RUN adduser --disabled-password --gecos '' vncuser \
     && echo 'vncuser:1' | chpasswd \
     && usermod -aG sudo vncuser \
     && usermod --shell /usr/bin/zsh vncuser \
-    && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+    && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
+    && mkdir -p /home/vncuser/.config/chromium \
+    && mkdir -p /home/vncuser/.cache/chromium \
+    && mkdir -p /tmp/crashpad \
+    && chown -R vncuser:vncuser /home/vncuser/.config \
+    && chown -R vncuser:vncuser /home/vncuser/.cache \
+    && chmod -R 755 /home/vncuser/.config \
+    && chmod -R 755 /home/vncuser/.cache \
+    && chmod 777 /tmp/crashpad
 
 # Switch to non-root user.
 USER vncuser
@@ -50,3 +65,18 @@ RUN mkdir -p ~/.vnc \
     && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/vncuser/.powerlevel10k \
     && echo 'source ~/.powerlevel10k/powerlevel10k.zsh-theme' >> /home/vncuser/.zshrc \
     && echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /home/vncuser/.zshrc
+
+# Remove the problematic RUN command since we already created the directories
+RUN mkdir -p ~/.config/chromium \
+    && mkdir -p ~/.cache/chromium \
+    && mkdir -p /tmp/crashpad
+
+# Add Chromium flags for container environment
+RUN echo '{\n\
+    "browser": {\n\
+        "enabled_labs_experiments": ["enable-gpu-rasterization"]\n\
+    },\n\
+    "crashpad": {\n\
+        "enabled": false\n\
+    }\n\
+}' > ~/.config/chromium/Local\ State
