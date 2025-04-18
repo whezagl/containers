@@ -8,9 +8,16 @@ A collection of Docker containers for running Chromium browser in various VNC co
 Base container with core dependencies:
 - Debian Bookworm base
 - LXQT desktop environment
-- Chromium browser
-- ZSH with Powerlevel10k theme
-- Basic development tools (vim, git, curl)
+- Chromium browser with GPU rasterization enabled
+- ZSH with enhanced features:
+  - Zim Framework for modular configuration
+  - Powerlevel10k theme
+  - Auto-suggestions
+  - Syntax highlighting
+  - Fast startup with skip_global_compinit
+- Basic development tools (vim, git, curl, ripgrep, fzf)
+- Featherpad text editor
+- Kitty terminal emulator
 
 ### 2. chromium-vnc
 Extends chromium-base with:
