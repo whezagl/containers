@@ -3,6 +3,7 @@ FROM wharsojo/chromium-base:latest
 USER root
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
+ENV VNC_PASSWORD=1
 
 # Install necessary packages for vnc
 RUN apt-get update && apt-get install -y \

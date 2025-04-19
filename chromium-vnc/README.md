@@ -12,7 +12,11 @@ A Docker container with Chromium browser and TigerVNC server, based on chromium-
   - Dual VNC ports (5900, 5901)
   - Custom resolution support
   - Persistent configuration
-- Default VNC password: 1
+
+## Prerequisites
+- Docker installed and running
+- At least 2GB of free RAM
+- VNC client installed (e.g., RealVNC, TigerVNC)
 
 ## Build Instructions
 ```bash
@@ -57,3 +61,10 @@ docker run -dit \
 - Base image: wharsojo/chromium-base:latest
 - Recommended VNC clients: TigerVNC Viewer, RealVNC Viewer
 - For web-based access, consider using chromium-novnc variant instead
+
+### Security Note
+The default VNC password is set to '1' for demonstration purposes. For production use:
+- Change the VNC password using the `VNC_PASSWORD` environment variable:
+  ```bash
+  -e VNC_PASSWORD=your_secure_password
+  ```
