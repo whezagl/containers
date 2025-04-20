@@ -38,7 +38,6 @@ docker run -dit \
   -p 5900:5900 \
   -p 5901:5901 \
   -e RESOLUTION=1920x1080 \
-  -e VNC_PASSWORD=your_secure_password \
   -v $(pwd)/user:/home/vncuser/user \
   -v $(pwd)/user/etc/xdg/menus:/etc/xdg/menus \
   -v $(pwd)/user/.config/lxqt:/home/vncuser/.config/lxqt \

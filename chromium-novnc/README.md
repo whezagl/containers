@@ -50,7 +50,6 @@ docker run -dit \
   -p 5901:5901 \
   -p 6080:6080 \
   -e RESOLUTION=1910x965 \
-  -e VNC_PASSWORD=your_secure_password \
   -v $(pwd)/user:/home/vncuser/user \
   -v $(pwd)/user/etc/xdg/menus:/etc/xdg/menus \
   -v $(pwd)/user/.config/lxqt:/home/vncuser/.config/lxqt \
@@ -70,9 +69,9 @@ docker run -dit \
   - Enter password: 1
 - VNC Client (Alternative):
   - Connect to localhost:5900 or localhost:5901
-  - Enter password: 1
+- Enter password: 1
 
-### Security Note
+## Security Note
 The default VNC password is set to '1' for demonstration purposes. For production use:
 - Change the VNC password using the `VNC_PASSWORD` environment variable:
   ```bash
