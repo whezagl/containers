@@ -7,7 +7,10 @@ vncserver -kill :1 || true
 rm -rf /tmp/.X* /tmp/.x* ~/.vnc/*.pid
 
 # Generate VNC password
-vncpasswd -f <<< '1' > ~/.vnc/passwd
+if [ -z "$VNC_PASSWORD" ]; then
+    VNC_PASSWORD="1"
+fi
+vncpasswd -f <<< "$VNC_PASSWORD" > ~/.vnc/passwd
 chmod 600 ~/.vnc/passwd
 
 # Start LXQt session

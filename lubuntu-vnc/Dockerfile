@@ -2,6 +2,7 @@ FROM ubuntu:24.10
 
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
+ENV VNC_PASSWORD=1
 
 # Install necessary packages --no-install-recommends
 RUN apt-get update && apt-get install -y --no-install-suggests \
