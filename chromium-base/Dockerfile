@@ -62,11 +62,6 @@ WORKDIR /home/vncuser
 COPY user/.config/lxqt/session.conf /home/vncuser/.config/lxqt/session.conf
 COPY user/.config/qterminal.org/qterminal.ini /home/vncuser/.config/qterminal.org/qterminal.ini
 
-# Add Chromium flags and create a wrapper script first
-RUN mkdir -p ~/.config/chromium/Default && \
-    echo '#!/bin/bash\nsudo service dbus start\nexec chromium "$@"' > /home/vncuser/chromium-wrapper.sh && \
-    chmod +x /home/vncuser/chromium-wrapper.sh
-
 # Set up Zim and Powerlevel10k
 RUN mkdir -p ~/.vnc \
     && echo 'skip_global_compinit=1' > /home/vncuser/.zshenv \
