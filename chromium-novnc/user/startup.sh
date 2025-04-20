@@ -12,7 +12,7 @@ vncserver -kill :1 || true
 rm -rf /tmp/.X* /tmp/.x* ~/.vnc/*.pid
 
 # Generate VNC password
-vncpasswd -f <<< '1' > ~/.vnc/passwd
+vncpasswd -f <<< "${VNC_PASSWORD:-1}" > ~/.vnc/passwd
 chmod 600 ~/.vnc/passwd
 
 # Create xstartup for VNC
