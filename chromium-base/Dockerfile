@@ -62,6 +62,12 @@ WORKDIR /home/vncuser
 COPY user/.config/lxqt/session.conf /home/vncuser/.config/lxqt/session.conf
 COPY user/.config/qterminal.org/qterminal.ini /home/vncuser/.config/qterminal.org/qterminal.ini
 
+# Add Chromium flags and create a wrapper script first
+RUN mkdir -p ~/.config/chromium/Default && \
+    echo '#!/bin/bash\nsudo service dbus start\nexec chromium "$@"' > /home/vncuser/chromium-wrapper.sh && \
+    chmod +x /home/vncuser/chromium-wrapper.sh
+
+# Set up Zim and Powerlevel10k
 RUN mkdir -p ~/.vnc \
     && echo 'skip_global_compinit=1' > /home/vncuser/.zshenv \
     && curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh \
@@ -70,17 +76,48 @@ RUN mkdir -p ~/.vnc \
     && echo 'source ~/.powerlevel10k/powerlevel10k.zsh-theme' >> /home/vncuser/.zshrc \
     && echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /home/vncuser/.zshrc
 
+# Add the chromium alias in a separate command
+RUN echo 'alias chromium="$CHROMIUM_WRAPPER"' >> /home/vncuser/.zshrc
+
 # Remove the problematic RUN command since we already created the directories
 RUN mkdir -p ~/.config/chromium \
     && mkdir -p ~/.cache/chromium \
     && mkdir -p /tmp/crashpad
 
-# Add Chromium flags for container environment
-RUN echo '{\n\
-    "browser": {\n\
-        "enabled_labs_experiments": ["enable-gpu-rasterization"]\n\
-    },\n\
-    "crashpad": {\n\
-        "enabled": false\n\
-    }\n\
-}' > ~/.config/chromium/Local\ State
+# Add environment variable for customizable homepage (move this earlier)
+ENV CHROME_STARTUP_URL=about:blank
+ENV CHROMIUM_WRAPPER=/home/vncuser/chromium-wrapper.sh
+
+# Create wrapper script and Chromium config
+RUN mkdir -p ~/.config/chromium/Default && \
+    echo '#!/bin/bash\n\
+if pgrep -x "chromium" > /dev/null; then\n\
+    echo "Chromium is already running"\n\
+    exit 1\n\
+fi\n\
+sudo service dbus stop\n\
+sudo rm -f /var/run/dbus/pid\n\
+sudo dbus-daemon --system\n\
+exec chromium --no-first-run --remote-debugging-port=9222 "${CHROME_STARTUP_URL}" "$@"' > /home/vncuser/chromium-wrapper.sh && \
+    chmod +x /home/vncuser/chromium-wrapper.sh && \
+    echo '{\
+    "browser": {\
+        "enabled_labs_experiments": ["enable-gpu-rasterization"],\
+        "startup_urls": ["'${CHROME_STARTUP_URL}'"]\
+    },\
+    "crashpad": {\
+        "enabled": false\
+    }\
+}' > ~/.config/chromium/Local\ State && \
+    echo '{\
+    "homepage": "'${CHROME_STARTUP_URL}'",\
+    "homepage_is_newtabpage": false,\
+    "session": {\
+        "restore_on_startup": 4,\
+        "startup_urls": ["'${CHROME_STARTUP_URL}'"],\
+        "startup_urls_migration_time": "0"\
+    }\
+}' > ~/.config/chromium/Default/Preferences
+
+# Add the chromium alias
+RUN echo 'alias chromium="$CHROMIUM_WRAPPER"' >> /home/vncuser/.zshrc
